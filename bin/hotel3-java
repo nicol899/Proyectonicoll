@@ -1,0 +1,132 @@
+import java.util.Scanner;
+
+public class Hotel {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        boolean salir = false;
+
+        // Declaración de matrices y arrays
+        String[][] nombresClientes = new String[2][5];
+        double[][] precioHabitaciones = {
+            {35000, 35000, 35000, 35000, 35000},
+            {40000, 40000, 40000, 40000, 40000}
+        };
+        int[][] nochesReservadas = new int[2][5];
+
+        while (!salir) {
+            System.out.println("\n--- Sistema de Reservas de Hotel ---");
+            System.out.println("1. Registrar Reserva");
+            System.out.println("2. Cancelar Reserva");
+            System.out.println("3. Generar Reporte");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
+            int opcion = sc.nextInt();
+
+            if (opcion == 1) {
+                // REGISTRAR RESERVA
+                System.out.print("Ingrese el nombre del cliente: ");
+                sc.nextLine(); // Limpiar buffer
+                String nombreCliente = sc.nextLine();
+
+                System.out.print("Ingrese el número de piso (1 o 2): ");
+                int piso = sc.nextInt();
+                if (piso < 1 || piso > 2) {
+                    System.out.println("Error: El piso ingresado no es válido.");
+                    continue;
+                }
+                int iPiso = piso - 1;
+
+                System.out.print("Ingrese el número de habitación (101-105 para piso 1, 201-205 para piso 2): ");
+                int habitacion = sc.nextInt();
+
+                if ((piso == 1 && (habitacion < 101 || habitacion > 105)) ||
+                    (piso == 2 && (habitacion < 201 || habitacion > 205))) {
+                    System.out.println("Error: El número de habitación no es válido.");
+                    continue;
+                }
+
+                int iHab = (piso == 1) ? habitacion - 101 : habitacion - 201;
+
+                if (nombresClientes[iPiso][iHab] != null) {
+                    System.out.println("La habitación ya está ocupada.");
+                    continue;
+                }
+
+                System.out.print("Ingrese el número de noches reservadas: ");
+                int noches = sc.nextInt();
+                sc.nextLine(); // Limpiar buffer
+
+                nombresClientes[iPiso][iHab] = nombreCliente;
+                nochesReservadas[iPiso][iHab] = noches;
+
+                double total = noches * precioHabitaciones[iPiso][iHab];
+                System.out.println("Reserva registrada. Total a pagar: $" + total);
+
+            } else if (opcion == 2) {
+                // CANCELAR RESERVA
+                System.out.print("Ingrese el número de piso (1 o 2): ");
+                int piso = sc.nextInt();
+                if (piso < 1 || piso > 2) {
+                    System.out.println("Error: El piso ingresado no es válido.");
+                    continue;
+                }
+                int iPiso = piso - 1;
+
+                System.out.print("Ingrese el número de habitación: ");
+                int habitacion = sc.nextInt();
+
+                if ((piso == 1 && (habitacion < 101 || habitacion > 105)) ||
+                    (piso == 2 && (habitacion < 201 || habitacion > 205))) {
+                    System.out.println("Error: El número de habitación no es válido.");
+                    continue;
+                }
+
+                int iHab = (piso == 1) ? habitacion - 101 : habitacion - 201;
+
+                if (nombresClientes[iPiso][iHab] == null) {
+                    System.out.println("La habitación ya está vacía.");
+                    continue;
+                }
+
+                nombresClientes[iPiso][iHab] = null;
+                nochesReservadas[iPiso][iHab] = 0;
+
+                System.out.println("Reserva cancelada en la habitación " + habitacion + ".");
+
+            } else if (opcion == 3) {
+                // GENERAR REPORTE
+                System.out.println("\n--- Reporte de Reservas ---");
+
+                System.out.println("\nHabitaciones ocupadas:");
+                for (int i = 0; i < nombresClientes.length; i++) {
+                    System.out.println("Piso " + (i + 1) + ":");
+                    for (int j = 0; j < nombresClientes[i].length; j++) {
+                        if (nombresClientes[i][j] != null) {
+                            int numeroHabitacion = (i == 0) ? 101 + j : 201 + j;
+                            System.out.println("  Habitación " + numeroHabitacion + ": Ocupada por " + nombresClientes[i][j]);
+                        }
+                    }
+                }
+
+                System.out.println("\nHabitaciones disponibles:");
+                for (int i = 0; i < nombresClientes.length; i++) {
+                    System.out.print("Piso " + (i + 1) + ": ");
+                    for (int j = 0; j < nombresClientes[i].length; j++) {
+                        if (nombresClientes[i][j] == null) {
+                            int numeroHabitacion = (i == 0) ? 101 + j : 201 + j;
+                            System.out.print(numeroHabitacion + " ");
+                        }
+                    }
+                    System.out.println();
+                }
+
+            } else if (opcion == 4) {
+                salir = true;
+                System.out.println("Gracias por usar el sistema. ¡Hasta pronto!");
+            } else {
+                System.out.println("Opción no válida.");
+            }
+        }
+        sc.close();
+    }
+}

@@ -1,4 +1,4 @@
-public class Ejercicio9 {
+public class OperadoresdeConparacion {
     public static void main(String[] args) {
         int numero1 = 10; 
         int numero2 = 20; 
